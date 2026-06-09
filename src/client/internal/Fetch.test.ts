@@ -669,7 +669,7 @@ describe('Fetch.from: 402 retry path', () => {
     expect(headers.get('Authorization')).toBe('credential')
   })
 
-  test('sends credential retry to the final 402 response URL', async () => {
+  test('sends credential retry to the final same-origin 402 response URL', async () => {
     let callCount = 0
     const calls: { input: RequestInfo | URL; init: RequestInit | undefined }[] = []
     const mockFetch: typeof globalThis.fetch = async (input, init) => {
@@ -678,7 +678,7 @@ describe('Fetch.from: 402 retry path', () => {
       if (callCount === 1) {
         const response = make402()
         Object.defineProperty(response, 'url', {
-          value: 'https://payments.example.com/protected',
+          value: 'https://api.example.com/redirected-protected',
         })
         return response
       }
@@ -694,8 +694,33 @@ describe('Fetch.from: 402 retry path', () => {
 
     expect(response.status).toBe(200)
     expect(calls[0]!.input).toBe('https://api.example.com/protected')
-    expect(calls[1]!.input).toBe('https://payments.example.com/protected')
+    expect(calls[1]!.input).toBe('https://api.example.com/redirected-protected')
     expect(new Headers(calls[1]!.init?.headers).get('Authorization')).toBe('credential')
+  })
+
+  test('rejects credential retry to a cross-origin 402 response URL', async () => {
+    const calls: { input: RequestInfo | URL; init: RequestInit | undefined }[] = []
+    const mockFetch: typeof globalThis.fetch = async (input, init) => {
+      calls.push({ input, init })
+      const response = make402()
+      Object.defineProperty(response, 'url', {
+        value: 'https://payments.example.com/protected',
+      })
+      return response
+    }
+
+    const fetch = Fetch.from({
+      fetch: mockFetch,
+      methods: [noopMethod],
+    })
+
+    await expect(fetch('https://api.example.com/protected')).rejects.toThrow(
+      'Refusing to send payment credential across redirect from https://api.example.com to https://payments.example.com',
+    )
+
+    expect(calls).toHaveLength(1)
+    expect(calls[0]!.input).toBe('https://api.example.com/protected')
+    expect(new Headers(calls[0]!.init?.headers).get('Authorization')).toBeNull()
   })
 
   test('emits client events and allows challenge handler to provide credential', async () => {

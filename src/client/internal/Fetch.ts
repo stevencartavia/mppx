@@ -263,7 +263,7 @@ export function from<const methods extends readonly Method.AnyClient[]>(
       )
 
       const paymentResponse = await baseFetch(
-        resolvePaymentRetryInput(response, initialRequest.input),
+        resolvePaymentRetryInput(response, initialRequest.input, initialRequest.input),
         transport.setCredential(
           {
             ...fetchInit,
@@ -848,6 +848,17 @@ function resolveRequestUrl(input: RequestInfo | URL): URL {
 function resolvePaymentRetryInput(
   response: Response,
   fallback: RequestInfo | URL,
+  initialInput: RequestInfo | URL,
 ): RequestInfo | URL {
-  return response.url ? response.url : fallback
+  if (!response.url) return fallback
+
+  const responseUrl = new URL(response.url)
+  const initialUrl = resolveRequestUrl(initialInput)
+  if (responseUrl.origin !== initialUrl.origin) {
+    throw new Error(
+      `Refusing to send payment credential across redirect from ${initialUrl.origin} to ${responseUrl.origin}`,
+    )
+  }
+
+  return response.url
 }
