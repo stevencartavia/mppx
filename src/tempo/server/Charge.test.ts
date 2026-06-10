@@ -2430,7 +2430,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
@@ -2468,7 +2468,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
@@ -2583,7 +2583,7 @@ describe('tempo', () => {
             domain: Proof.domain(chain.id),
             types: Proof.types,
             primaryType: 'Proof',
-            message: Proof.message(challenge.id, challenge.realm),
+            message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
           })
 
           const credential = Credential.from({
@@ -2744,7 +2744,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
@@ -2805,7 +2805,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.serialize(
@@ -2879,7 +2879,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
@@ -2942,7 +2942,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge1.id, challenge1.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge1.id, realm: challenge1.realm }),
       })
 
       const credential1 = Credential.from({
@@ -2973,7 +2973,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge2.id, challenge2.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge2.id, realm: challenge2.realm }),
       })
 
       const credential2 = Credential.from({
@@ -3010,7 +3010,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
@@ -3046,7 +3046,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
@@ -3145,7 +3145,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
@@ -3183,7 +3183,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
@@ -3222,7 +3222,7 @@ describe('tempo', () => {
         domain: Proof.domain(99999),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
@@ -3258,7 +3258,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, 'evil.example.com'),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: 'evil.example.com' }),
       })
 
       const credential = Credential.from({
@@ -3294,7 +3294,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
@@ -3330,7 +3330,7 @@ describe('tempo', () => {
         domain: Proof.domain(chain.id),
         types: Proof.types,
         primaryType: 'Proof',
-        message: Proof.message(challenge.id, challenge.realm),
+        message: Proof.message({ account: accounts[1].address, challengeId: challenge.id, realm: challenge.realm }),
       })
 
       const credential = Credential.from({
