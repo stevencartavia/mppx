@@ -13,12 +13,7 @@ test('Proof exports the wallet-bound typed-data contract helpers', () => {
   >()
 
   expectTypeOf(Proof.hash).toEqualTypeOf<
-    (parameters: {
-      account: Address
-      chainId: number
-      challengeId: string
-      realm: string
-    }) => Hex
+    (parameters: { account: Address; chainId: number; challengeId: string; realm: string }) => Hex
   >()
 })
 

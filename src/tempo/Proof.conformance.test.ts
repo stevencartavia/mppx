@@ -124,7 +124,12 @@ describe('tempo.Proof conformance (wallet binding)', () => {
     const account = privateKeyToAccount(vector.privateKey)
     const legacyTypedData = {
       domain: { name: 'MPP', version: '2', chainId: vector.chainId },
-      types: { Proof: [{ name: 'challengeId', type: 'string' }, { name: 'realm', type: 'string' }] },
+      types: {
+        Proof: [
+          { name: 'challengeId', type: 'string' },
+          { name: 'realm', type: 'string' },
+        ],
+      },
       primaryType: 'Proof',
       message: { challengeId: vector.challengeId, realm: vector.realm },
     } as const
