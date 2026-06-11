@@ -403,6 +403,15 @@ export function charge<const parameters extends charge.Parameters>(
             const expectedFeeToken = defaults.currency[chainId as keyof typeof defaults.currency]
             const resolvedFeeToken = transaction.feeToken ?? expectedFeeToken
 
+            // Request for the pre-broadcast simulation; for sponsored payments
+            // this is overwritten below with the co-signed shape.
+            let simulationRequest: Record<string, unknown> = {
+              ...transaction,
+              account: transaction.from,
+              calls: transaction.calls,
+              feePayerSignature: undefined,
+            }
+
             const serializedTransaction_final = await (async () => {
               if (feePayerAccount && methodDetails?.feePayer !== false) {
                 const sponsored = FeePayer.prepareSponsoredTransaction({
@@ -417,18 +426,25 @@ export function charge<const parameters extends charge.Parameters>(
                     ...(resolvedFeeToken ? { feeToken: resolvedFeeToken } : {}),
                   },
                 })
+                // `account` is the sender (eth_call `from`); `feePayer` is the
+                // sponsor that pays gas.
+                simulationRequest = {
+                  ...sponsored,
+                  account: transaction.from,
+                  feePayer: feePayerAccount.address,
+                  feePayerSignature: undefined,
+                  signature: undefined,
+                }
                 return signTransaction(client, sponsored as never)
               }
               return serializedTransaction
             })()
 
+            // Pre-broadcast simulation: fail closed before broadcast so the
+            // sponsor never pays gas for a transaction that would revert.
+            await viem_call(client, simulationRequest as never)
+
             if (waitForConfirmation) {
-              await viem_call(client, {
-                ...transaction,
-                account: transaction.from,
-                calls: transaction.calls,
-                feePayerSignature: undefined,
-              } as never)
               const receipt = await sendRawTransactionSync(client, {
                 serializedTransaction: serializedTransaction_final,
               })
@@ -458,15 +474,9 @@ export function charge<const parameters extends charge.Parameters>(
               return toReceipt(receipt)
             }
 
-            // Optimistic path: simulate to catch obvious reverts, then broadcast
-            // without waiting for on-chain confirmation. The returned receipt
-            // assumes success — callers opt into this risk via waitForConfirmation: false.
-            await viem_call(client, {
-              ...transaction,
-              account: transaction.from,
-              calls: transaction.calls,
-              feePayerSignature: undefined,
-            } as never)
+            // Optimistic path: broadcast without waiting for confirmation
+            // (simulation above already ran). The returned receipt assumes
+            // success — callers opt in via waitForConfirmation: false.
             const reference = await sendRawTransaction(client, {
               serializedTransaction: serializedTransaction_final,
             })
